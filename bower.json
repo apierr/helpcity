@@ -1,0 +1,22 @@
+{
+  "directory": "./public/",
+  "name": "helpcity",
+  "version": "0.0.0",
+  "authors": [
+    "Antonio Pierro <antonio.pierro@gmail.com>"
+  ],
+  "moduleType": [
+    "node"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "public/bower_components",
+    "test",
+    "tests"
+  ],
+  "devDependencies": {
+    "bootleaf": "~0.0.0"
+  }
+}
