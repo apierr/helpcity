@@ -1,5 +1,5 @@
 {
-  "NAME": "leaflet.locatecontrol",
+  "name": "leaflet.locatecontrol",
   "version": "0.40.0",
   "homepage": "https://github.com/domoritz/leaflet-locatecontrol",
   "authors": [

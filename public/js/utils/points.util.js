@@ -30,12 +30,12 @@
                             $("#feature-title").html(feature.properties.NAME);
                             $("#feature-info").html(content);
                             $("#featureModal").modal("show");
-                            highlight.clearLayers().addLayer(L.circleMarker([feature.geometry.coordinates[1], feature.geometry.coordinates[0]], {
-                                stroke: false,
-                                fillColor: "#00FFFF",
-                                fillOpacity: 0.7,
-                                radius: 10
-                            }));
+                            // highlight.clearLayers().addLayer(L.circleMarker([feature.geometry.coordinates[1], feature.geometry.coordinates[0]], {
+                            //     stroke: false,
+                            //     fillColor: "#00FFFF",
+                            //     fillOpacity: 0.7,
+                            //     radius: 10
+                            // }));
                         }
                     });
                     $("#feature-list tbody").append('<tr class="feature-row" id="'+L.stamp(layer)+'"><td style="vertical-align: middle;"><img width="16" height="18" src="assets/img/theater.png"></td><td class="feature-name">'+layer.feature.properties.NAME+'</td><td style="vertical-align: middle;"><i class="fa fa-chevron-right pull-right"></i></td></tr>');
