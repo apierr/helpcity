@@ -2,14 +2,13 @@
   'use strict';
 
   define([
-      'utils/theaters.util',
       'utils/points.util',
       'jquery',
       'bootstrap',
       'leafletMarkerCluster',
       'leafletLocateControl',
       'leafletGroupedLayerControl'
-  ], function (theatersUtil, pointsUtil){
+  ], function (pointsUtil){
     var map, featureList, boroughSearch = [], theaterSearch = [], museumSearch = [];
 
     $(document).on("click", ".feature-row", function(e) {
@@ -59,7 +58,7 @@
     });
 
     function sidebarClick(id) {
-      map.addLayer(theaterLayer).addLayer(museumLayer);
+      //map.addLayer(theaterLayer).addLayer(museumLayer);
       var layer = markerClusters.getLayer(id);
       markerClusters.zoomToShowLayer(layer, function() {
         map.setView([layer.getLatLng().lat, layer.getLatLng().lng], 17);
@@ -113,7 +112,7 @@
         });
       }
     });
-    $.getJSON("data/boroughs.geojson", function (data) {
+    $.getJSON("data/CagliariLimiti.geojson", function (data) {
       boroughs.addData(data);
     });
 
@@ -126,13 +125,6 @@
     });
 
     /* Empty layer placeholder to add to layer control for listening when to add/remove theaters to markerClusters layer */
-        var theaterLayer = L.geoJson(null);
-        var theaters = theatersUtil;
-        $.getJSON("data/DOITT_THEATER_01_13SEPT2010.geojson", function (data) {
-          theaters.addData(data);
-          map.addLayer(theaterLayer);
-        });
-
 
         var pointsLayer = L.geoJson(null);
         var points = pointsUtil;
@@ -172,15 +164,7 @@
               }));
             }
           });
-          $("#feature-list tbody").append('<tr class="feature-row" id="'+L.stamp(layer)+'"><td style="vertical-align: middle;"><img width="16" height="18" src="assets/img/museum.png"></td><td class="feature-name">'+layer.feature.properties.NAME+'</td><td style="vertical-align: middle;"><i class="fa fa-chevron-right pull-right"></i></td></tr>');
-          museumSearch.push({
-            name: layer.feature.properties.NAME,
-            address: layer.feature.properties.ADRESS1,
-            source: "Museums",
-            id: L.stamp(layer),
-            lat: layer.feature.geometry.coordinates[1],
-            lng: layer.feature.geometry.coordinates[0]
-          });
+          //$("#feature-list tbody").append('<tr class="feature-row" id="'+L.stamp(layer)+'"><td style="vertical-align: middle;"><img width="16" height="18" src="assets/img/museum.png"></td><td class="feature-name">'+layer.feature.properties.NAME+'</td><td style="vertical-align: middle;"><i class="fa fa-chevron-right pull-right"></i></td></tr>');
         }
       }
     });
@@ -198,9 +182,6 @@
 
     /* Layer control listeners that allow for a single markerClusters layer */
     map.on("overlayadd", function(e) {
-        if (e.layer === theaterLayer) {
-        markerClusters.addLayer(theaters);
-        }
         if (e.layer === museumLayer) {
         markerClusters.addLayer(museums);
         }
@@ -210,9 +191,6 @@
     });
 
     map.on("overlayremove", function(e) {
-        if (e.layer === theaterLayer) {
-        markerClusters.removeLayer(theaters);
-        }
         if (e.layer === museumLayer) {
         markerClusters.removeLayer(museums);
         }
@@ -297,13 +275,11 @@
     };
 
     var groupedOverlays = {
-      "Points of Interest": {
-        "<img src='assets/img/theater.png' width='24' height='28'>&nbsp;Theaters": theaterLayer,
-        "<img src='assets/img/museum.png' width='24' height='28'>&nbsp;Museums": museumLayer,
-        "<img src='assets/img/points.png' width='24' height='28'>&nbsp;Points": pointsLayer
+      "Beni Disponibili": {
+        "<img src='assets/img/points.png' width='24' height='33'>&nbsp;Spazi Cultura/Eventi": pointsLayer
       },
       "Reference": {
-        "Boroughs": boroughs
+        //"Boroughs": boroughs
       }
     };
 
@@ -429,9 +405,6 @@
           map.fitBounds(datum.bounds);
         }
         if (datum.source === "Theaters") {
-          if (!map.hasLayer(theaterLayer)) {
-            map.addLayer(theaterLayer);
-          }
           map.setView([datum.lat, datum.lng], 17);
           if (map._layers[datum.id]) {
             map._layers[datum.id].fire("click");
