@@ -1,5 +1,4 @@
 {
-  "directory": "./public/",
   "name": "helpcity",
   "version": "0.0.0",
   "authors": [
@@ -17,6 +16,9 @@
     "tests"
   ],
   "devDependencies": {
-    "bootleaf": "~0.0.0"
+    "bootleaf": "~0.0.0",
+    "bootstrap": "~3.3.4",
+    "requirejs": "~2.1.17",
+    "jquery": "~2.1.3"
   }
 }
