@@ -2,12 +2,13 @@
   'use strict';
 
   define([
+      'utils/points.util',
       'jquery',
       'bootstrap',
       'leafletMarkerCluster',
       'leafletLocateControl',
       'leafletGroupedLayerControl'
-  ], function (){
+  ], function (pointsUtil){
     var map, featureList, boroughSearch = [], theaterSearch = [], museumSearch = [];
 
     $(document).on("click", ".feature-row", function(e) {
@@ -57,7 +58,7 @@
     });
 
     function sidebarClick(id) {
-      map.addLayer(theaterLayer).addLayer(museumLayer);
+      //map.addLayer(theaterLayer).addLayer(museumLayer);
       var layer = markerClusters.getLayer(id);
       markerClusters.zoomToShowLayer(layer, function() {
         map.setView([layer.getLatLng().lat, layer.getLatLng().lng], 17);
@@ -111,127 +112,8 @@
         });
       }
     });
-    $.getJSON("data/boroughs.geojson", function (data) {
+    $.getJSON("data/CagliariLimiti.geojson", function (data) {
       boroughs.addData(data);
-    });
-
-    var subwayLines = L.geoJson(null, {
-      style: function (feature) {
-        if (feature.properties.route_id === "1" || feature.properties.route_id === "2" || feature.properties.route_id === "3") {
-          return {
-            color: "#ff3135",
-            weight: 3,
-            opacity: 1
-          };
-        }
-        if (feature.properties.route_id === "4" || feature.properties.route_id === "5" || feature.properties.route_id === "6") {
-          return {
-            color: "#009b2e",
-            weight: 3,
-            opacity: 1
-          };
-        }
-        if (feature.properties.route_id === "7") {
-          return {
-            color: "#ce06cb",
-            weight: 3,
-            opacity: 1
-          };
-        }
-        if (feature.properties.route_id === "A" || feature.properties.route_id === "C" || feature.properties.route_id === "E" || feature.properties.route_id === "SI" || feature.properties.route_id === "H") {
-          return {
-            color: "#fd9a00",
-            weight: 3,
-            opacity: 1
-          };
-        }
-        if (feature.properties.route_id === "Air") {
-          return {
-            color: "#ffff00",
-            weight: 3,
-            opacity: 1
-          };
-        }
-        if (feature.properties.route_id === "B" || feature.properties.route_id === "D" || feature.properties.route_id === "F" || feature.properties.route_id === "M") {
-          return {
-            color: "#ffff00",
-            weight: 3,
-            opacity: 1
-          };
-        }
-        if (feature.properties.route_id === "G") {
-          return {
-            color: "#9ace00",
-            weight: 3,
-            opacity: 1
-          };
-        }
-        if (feature.properties.route_id === "FS" || feature.properties.route_id === "GS") {
-          return {
-            color: "#6e6e6e",
-            weight: 3,
-            opacity: 1
-          };
-        }
-        if (feature.properties.route_id === "J" || feature.properties.route_id === "Z") {
-          return {
-            color: "#976900",
-            weight: 3,
-            opacity: 1
-          };
-        }
-        if (feature.properties.route_id === "L") {
-          return {
-            color: "#969696",
-            weight: 3,
-            opacity: 1
-          };
-        }
-        if (feature.properties.route_id === "N" || feature.properties.route_id === "Q" || feature.properties.route_id === "R") {
-          return {
-            color: "#ffff00",
-            weight: 3,
-            opacity: 1
-          };
-        }
-      },
-      onEachFeature: function (feature, layer) {
-        if (feature.properties) {
-          var content = "<table class='table table-striped table-bordered table-condensed'>" + "<tr><th>Division</th><td>" + feature.properties.Division + "</td></tr>" + "<tr><th>Line</th><td>" + feature.properties.Line + "</td></tr>" + "<table>";
-          layer.on({
-            click: function (e) {
-              $("#feature-title").html(feature.properties.Line);
-              $("#feature-info").html(content);
-              $("#featureModal").modal("show");
-              highlight.clearLayers().addLayer(L.circleMarker([e.latlng.lat, e.latlng.lng], {
-                stroke: false,
-                fillColor: "#00FFFF",
-                fillOpacity: 0.7,
-                radius: 10
-              }));
-            }
-          });
-        }
-        layer.on({
-          mouseover: function (e) {
-            var layer = e.target;
-            layer.setStyle({
-              weight: 3,
-              color: "#00FFFF",
-              opacity: 1
-            });
-            if (!L.Browser.ie && !L.Browser.opera) {
-              layer.bringToFront();
-            }
-          },
-          mouseout: function (e) {
-            subwayLines.resetStyle(e.target);
-          }
-        });
-      }
-    });
-    $.getJSON("data/subways.geojson", function (data) {
-      subwayLines.addData(data);
     });
 
     /* Single marker cluster layer to hold all clusters */
@@ -243,52 +125,13 @@
     });
 
     /* Empty layer placeholder to add to layer control for listening when to add/remove theaters to markerClusters layer */
-    var theaterLayer = L.geoJson(null);
-    var theaters = L.geoJson(null, {
-      pointToLayer: function (feature, latlng) {
-        return L.marker(latlng, {
-          icon: L.icon({
-            iconUrl: "assets/img/theater.png",
-            iconSize: [24, 28],
-            iconAnchor: [12, 28],
-            popupAnchor: [0, -25]
-          }),
-          title: feature.properties.NAME,
-          riseOnHover: true
+
+        var pointsLayer = L.geoJson(null);
+        var points = pointsUtil;
+        $.getJSON("data/Points.geojson", function (data) {
+            points.addData(data);
+            map.addLayer(pointsLayer);
         });
-      },
-      onEachFeature: function (feature, layer) {
-        if (feature.properties) {
-          var content = "<table class='table table-striped table-bordered table-condensed'>" + "<tr><th>Name</th><td>" + feature.properties.NAME + "</td></tr>" + "<tr><th>Phone</th><td>" + feature.properties.TEL + "</td></tr>" + "<tr><th>Address</th><td>" + feature.properties.ADDRESS1 + "</td></tr>" + "<tr><th>Website</th><td><a class='url-break' href='" + feature.properties.URL + "' target='_blank'>" + feature.properties.URL + "</a></td></tr>" + "<table>";
-          layer.on({
-            click: function (e) {
-              $("#feature-title").html(feature.properties.NAME);
-              $("#feature-info").html(content);
-              $("#featureModal").modal("show");
-              highlight.clearLayers().addLayer(L.circleMarker([feature.geometry.coordinates[1], feature.geometry.coordinates[0]], {
-                stroke: false,
-                fillColor: "#00FFFF",
-                fillOpacity: 0.7,
-                radius: 10
-              }));
-            }
-          });
-          $("#feature-list tbody").append('<tr class="feature-row" id="'+L.stamp(layer)+'"><td style="vertical-align: middle;"><img width="16" height="18" src="assets/img/theater.png"></td><td class="feature-name">'+layer.feature.properties.NAME+'</td><td style="vertical-align: middle;"><i class="fa fa-chevron-right pull-right"></i></td></tr>');
-          theaterSearch.push({
-            name: layer.feature.properties.NAME,
-            address: layer.feature.properties.ADDRESS1,
-            source: "Theaters",
-            id: L.stamp(layer),
-            lat: layer.feature.geometry.coordinates[1],
-            lng: layer.feature.geometry.coordinates[0]
-          });
-        }
-      }
-    });
-    $.getJSON("data/DOITT_THEATER_01_13SEPT2010.geojson", function (data) {
-      theaters.addData(data);
-      map.addLayer(theaterLayer);
-    });
 
     /* Empty layer placeholder to add to layer control for listening when to add/remove museums to markerClusters layer */
     var museumLayer = L.geoJson(null);
@@ -321,15 +164,7 @@
               }));
             }
           });
-          $("#feature-list tbody").append('<tr class="feature-row" id="'+L.stamp(layer)+'"><td style="vertical-align: middle;"><img width="16" height="18" src="assets/img/museum.png"></td><td class="feature-name">'+layer.feature.properties.NAME+'</td><td style="vertical-align: middle;"><i class="fa fa-chevron-right pull-right"></i></td></tr>');
-          museumSearch.push({
-            name: layer.feature.properties.NAME,
-            address: layer.feature.properties.ADRESS1,
-            source: "Museums",
-            id: L.stamp(layer),
-            lat: layer.feature.geometry.coordinates[1],
-            lng: layer.feature.geometry.coordinates[0]
-          });
+          //$("#feature-list tbody").append('<tr class="feature-row" id="'+L.stamp(layer)+'"><td style="vertical-align: middle;"><img width="16" height="18" src="assets/img/museum.png"></td><td class="feature-name">'+layer.feature.properties.NAME+'</td><td style="vertical-align: middle;"><i class="fa fa-chevron-right pull-right"></i></td></tr>');
         }
       }
     });
@@ -347,21 +182,21 @@
 
     /* Layer control listeners that allow for a single markerClusters layer */
     map.on("overlayadd", function(e) {
-      if (e.layer === theaterLayer) {
-        markerClusters.addLayer(theaters);
-      }
-      if (e.layer === museumLayer) {
+        if (e.layer === museumLayer) {
         markerClusters.addLayer(museums);
-      }
+        }
+        if (e.layer === pointsLayer) {
+        markerClusters.addLayer(points);
+        }
     });
 
     map.on("overlayremove", function(e) {
-      if (e.layer === theaterLayer) {
-        markerClusters.removeLayer(theaters);
-      }
-      if (e.layer === museumLayer) {
+        if (e.layer === museumLayer) {
         markerClusters.removeLayer(museums);
-      }
+        }
+        if (e.layer === pointsLayer) {
+            markerClusters.removeLayer(points);
+        }
     });
 
     /* Clear feature highlight when map is clicked */
@@ -440,13 +275,11 @@
     };
 
     var groupedOverlays = {
-      "Points of Interest": {
-        "<img src='assets/img/theater.png' width='24' height='28'>&nbsp;Theaters": theaterLayer,
-        "<img src='assets/img/museum.png' width='24' height='28'>&nbsp;Museums": museumLayer
+      "Beni Disponibili": {
+        "<img src='assets/img/points.png' width='24' height='33'>&nbsp;Spazi Cultura/Eventi": pointsLayer
       },
       "Reference": {
-        "Boroughs": boroughs,
-        "Subway Lines": subwayLines
+        //"Boroughs": boroughs
       }
     };
 
@@ -572,9 +405,6 @@
           map.fitBounds(datum.bounds);
         }
         if (datum.source === "Theaters") {
-          if (!map.hasLayer(theaterLayer)) {
-            map.addLayer(theaterLayer);
-          }
           map.setView([datum.lat, datum.lng], 17);
           if (map._layers[datum.id]) {
             map._layers[datum.id].fire("click");
