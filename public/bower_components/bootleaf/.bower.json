@@ -1,0 +1,28 @@
+{
+  "NAME": "bootleaf",
+  "version": "0.0.0",
+  "homepage": "https: //github.com/bmcbride/bootleaf",
+  "authors": [
+    "BryanMcBride<mcbride.bryan@gmail.com>"
+  ],
+  "description": "Template for building simple and elegant web mapping applications with Bootstrap and Leaflet",
+  "main": "assets/js/app.js",
+  "moduleType": [
+    "globals"
+  ],
+  "keywords": [
+    "leaflet",
+    "twitter",
+    "bootstrap"
+  ],
+  "license": "MIT",
+  "_release": "0.0.0",
+  "_resolution": {
+    "type": "version",
+    "tag": "0.0.0",
+    "commit": "dbfad002af88ad627a16ba959ae11ccb4839b23a"
+  },
+  "_source": "git://github.com/transportapi/bootleaf.git",
+  "_target": "~0.0.0",
+  "_originalSource": "bootleaf"
+}
