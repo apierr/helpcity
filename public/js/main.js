@@ -1,24 +1,27 @@
 (function (requirejs) {
     'use strict';
 
-    var vendorDir = './bower_components/';
+    var vendorDir = '../bower_components/';
 
     requirejs.config({
         urlArgs: 'bust=' + Date.now(),
         paths: {
-            jquery: vendorDir + 'jquery/dist/jquery'
+            jquery: vendorDir + 'jquery/dist/jquery',
+            bootstrap: vendorDir + 'bootstrap/dist/js/bootstrap',
+            leaflet: vendorDir + 'leaflet/dist/leaflet',
+            leafletMarkerCluster: vendorDir + 'leaflet.markercluster/dist/leaflet.markercluster',
+            leafletLocateControl: vendorDir + 'leaflet.locatecontrol/dist/L.Control.Locate.min',
+            leafletGroupedLayerControl: vendorDir + 'bootleaf/assets/leaflet-groupedlayercontrol/leaflet.groupedlayercontrol'
         },
-        // shim: {
-        //     angular: {
-        //         exports : 'angular'
-        //     },
-        //     lodash: {
-        //         exports: '_'
-        //     },
-        //     angularAnimate: {deps: ['angular']},
-        //     angularSanitize: {deps: ['angular']},
-        //     ionic:  {deps: ['angular'], exports : 'ionic'}
-        // },
+         shim: {
+             jquery: {
+                 exports : '$'
+             },
+             bootstrap : {deps: ['jquery']},
+             leafletMarkerCluster: {deps: ['leaflet']},
+             leafletLocateControl: {deps: ['leaflet']},
+             leafletGroupedLayerControl: {deps: ['leaflet']}
+         },
         deps: ['app']
     });
 
