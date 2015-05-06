@@ -168,9 +168,6 @@
         }
       }
     });
-    $.getJSON("data/DOITT_MUSEUM_01_13SEPT2010.geojson", function (data) {
-      museums.addData(data);
-    });
 
     map = L.map("map", {
       zoom: 10,
